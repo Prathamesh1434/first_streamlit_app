@@ -1,4 +1,9 @@
 import streamlit
+#import pandas
+import requests
+import snowflake.connector
+from urllib.error import URLError
+
 streamlit.title('My parents New Healthy Diner')
 
 streamlit.header('Breakfast Menu')
@@ -9,7 +14,6 @@ streamlit.text('🥑🍞 Avocado Toast')
 
 streamlit.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 
-import pandas
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 
 # Choose the Fruit Name Column as the Index
@@ -26,7 +30,7 @@ streamlit.dataframe(fruits_to_show)
 streamlit.header('Fruityvice Fruit Advice!')
 fruit_choice = streamlit.text_input('what fruit would you like information about?', 'kiwi')
 streamlit.write('The user entered', fruit_choice)
-import requests
+
 fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ fruit_choice)
 # streamlit.text(fruityvice_response.json()) # Just writes the data on the screen.
 
@@ -36,8 +40,10 @@ fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
 # o/p it on the screen as a Table
 streamlit.dataframe(fruityvice_normalized)
 
+# don't run anything past here while we troubleshoot
+streamlit.stop()
+
 # Connect with snowflake
-import snowflake.connector
 
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
